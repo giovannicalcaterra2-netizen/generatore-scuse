@@ -1,179 +1,450 @@
-<div class="tn2g-excuse-generator">
-  <div class="tn2g-excuse-card">
-    <div class="tn2g-badge">TN2G Utility Non Richiesta</div>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generatore di Scuse TN2G</title>
 
-    <h2>Generatore di Scuse TN2G</h2>
-
-    <p class="tn2g-subtitle">
-      Hai confermato troppo presto? Il divano ha preso il controllo?
-      Premi il pulsante e ricevi una scusa semi-credibile.
-    </p>
-
-    <div id="excuseBox" class="tn2g-excuse-box">
-      Premi il pulsante. Il caos farà il resto.
-    </div>
-
-    <div class="tn2g-actions">
-      <button id="generateExcuseBtn" class="tn2g-btn tn2g-btn-main">
-        Genera una scusa
-      </button>
-
-      <button id="copyExcuseBtn" class="tn2g-btn tn2g-btn-light" disabled>
-        Copia scusa
-      </button>
-
-      <a
-        id="whatsappShareBtn"
-        class="tn2g-btn tn2g-btn-whatsapp is-disabled"
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Condividi su WhatsApp
-      </a>
-    </div>
-
-    <p id="copyFeedback" class="tn2g-copy-feedback"></p>
-
-    <div class="tn2g-community-box">
-      <p>Vuoi usare la scusa direttamente nel suo habitat naturale?</p>
-
-      <a
-        class="tn2g-community-link"
-        href="https://chat.whatsapp.com/ECKcv63NBr5KW2wc5Lesmt"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Entra nella community TN2G
-      </a>
-    </div>
-
-    <p class="tn2g-warning">
-      ⚠️ Attenzione: l’uso improprio del generatore può comportare
-      l’assegnazione del badge <strong>Disertore</strong>.
-    </p>
-  </div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const TN2G_COMMUNITY_LINK = "https://chat.whatsapp.com/ECKcv63NBr5KW2wc5Lesmt";
-
-  const tn2gExcuses = [
-    "Raga scusate, stavo venendo ma il mio livello sociale è sceso sotto la soglia minima consentita.",
-    "Ho avuto un imprevisto mistico con la lavatrice. Non posso aggiungere altro.",
-    "Mi ero preparato psicologicamente, poi il divano ha presentato un’offerta migliore.",
-    "Sono bloccato in una quest secondaria e non riesco ad abbandonarla.",
-    "Raga arrivo dopo. Traduzione ufficiale: non arriverò.",
-    "Ho aperto Google Maps, ho visto il tragitto e ho rivalutato tutta la mia esistenza.",
-    "Mi si è aggiornato il sistema operativo dell’anima.",
-    "Sono uscito mentalmente, ma fisicamente sono rimasto in casa.",
-    "Avevo tutta l’intenzione di venire, poi ho fatto l’errore di sedermi.",
-    "Il mio outfit era pronto. Io no.",
-    "Raga scusate, oggi ho esaurito i gettoni sociali.",
-    "Sto combattendo una battaglia personale contro la gravità del letto.",
-    "Mi ero organizzato benissimo, infatti non verrò.",
-    "Ho avuto un’emergenza domestica: il divano sembrava triste.",
-    "Il meteo interiore segnala chiusura sociale fino a domani.",
-    "Sono stato rapito da una pennichella non consensuale.",
-    "Mi sono preparato troppo presto e ho perso slancio.",
-    "Il mio corpo ha votato contro la mia agenda.",
-    "Ho chiesto un parere al cuscino e ha detto di restare.",
-    "Non posso venire: ho una riunione urgente con me stesso.",
-    "Sono in modalità risparmio energetico.",
-    "Avevo detto sì in una versione più ottimista di me.",
-    "Il mio entusiasmo iniziale non ha superato la fase esecutiva.",
-    "Sto partecipando spiritualmente.",
-    "Mi sono perso tra il pensiero di venire e l’azione concreta.",
-    "Raga scusate, sono stato sconfitto da una coperta.",
-    "Il piano era uscire. Poi la realtà ha fatto ricorso.",
-    "Ho appena realizzato che socializzare richiede presenza fisica.",
-    "Sono tecnicamente pronto, emotivamente in manutenzione.",
-    "Oggi il mio personaggio non ha abbastanza stamina.",
-    "Sono stato trattenuto da cause di forza maggiore: me stesso.",
-    "Mi sono vestito, poi mi sono seduto. Grave errore tattico.",
-    "Il mio calendario diceva sì, il mio sistema nervoso ha detto no.",
-    "Raga scusate, sono in cooldown sociale.",
-    "Ho perso il duello contro il pigiama.",
-    "Ho aperto la chat, ho visto troppi messaggi e sono evaporato.",
-    "Ho avuto un bug nella fase di materializzazione all’evento.",
-    "La mia presenza è attualmente in fase beta e non stabile."
-  ];
-
-  const excuseBox = document.getElementById("excuseBox");
-  const generateExcuseBtn = document.getElementById("generateExcuseBtn");
-  const copyExcuseBtn = document.getElementById("copyExcuseBtn");
-  const whatsappShareBtn = document.getElementById("whatsappShareBtn");
-  const copyFeedback = document.getElementById("copyFeedback");
-
-  if (!excuseBox || !generateExcuseBtn || !copyExcuseBtn || !whatsappShareBtn) return;
-
-  let lastExcuseIndex = -1;
-  let currentExcuse = "";
-
-  function buildShareText(excuse) {
-    return encodeURIComponent(
-      "Scusa ufficiale generata dal Generatore di Scuse TN2G:\n\n" +
-      "“" + excuse + "”\n\n" +
-      "Vuoi generare anche tu una scusa discutibile? Entra nella community TN2G:\n" +
-      TN2G_COMMUNITY_LINK
-    );
-  }
-
-  function updateButtons() {
-    copyExcuseBtn.disabled = false;
-    whatsappShareBtn.classList.remove("is-disabled");
-    whatsappShareBtn.href = "https://wa.me/?text=" + buildShareText(currentExcuse);
-  }
-
-  function generateExcuse() {
-    excuseBox.classList.add("is-changing");
-    copyFeedback.textContent = "";
-
-    setTimeout(function () {
-      let randomIndex;
-
-      do {
-        randomIndex = Math.floor(Math.random() * tn2gExcuses.length);
-      } while (randomIndex === lastExcuseIndex);
-
-      lastExcuseIndex = randomIndex;
-      currentExcuse = tn2gExcuses[randomIndex];
-
-      excuseBox.textContent = "“" + currentExcuse + "”";
-      excuseBox.classList.remove("is-changing");
-
-      updateButtons();
-    }, 180);
-  }
-
-  async function copyExcuse() {
-    if (!currentExcuse) return;
-
-    const textToCopy =
-      "Scusa ufficiale TN2G:\n\n" +
-      "“" + currentExcuse + "”\n\n" +
-      "Generata dal Generatore di Scuse TN2G.";
-
-    try {
-      await navigator.clipboard.writeText(textToCopy);
-      copyFeedback.textContent = "Scusa copiata. Ora puoi usarla con moderata vergogna.";
-    } catch (error) {
-      const tempTextArea = document.createElement("textarea");
-      tempTextArea.value = textToCopy;
-      document.body.appendChild(tempTextArea);
-      tempTextArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(tempTextArea);
-      copyFeedback.textContent = "Scusa copiata. Ora puoi usarla con moderata vergogna.";
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #eef3f8;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    setTimeout(function () {
-      copyFeedback.textContent = "";
-    }, 3500);
-  }
+    .tn2g-excuse-generator {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 55px 18px;
+      box-sizing: border-box;
+    }
 
-  generateExcuseBtn.addEventListener("click", generateExcuse);
-  copyExcuseBtn.addEventListener("click", copyExcuse);
-});
-</script>
+    .tn2g-excuse-card {
+      width: 100%;
+      max-width: 860px;
+      background: radial-gradient(circle at top right, rgba(244, 211, 94, 0.18), transparent 32%),
+                  linear-gradient(135deg, #12355B 0%, #071726 100%);
+      color: #ffffff;
+      border-radius: 32px;
+      padding: 48px 34px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .tn2g-excuse-card::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 50%;
+      top: -110px;
+      right: -80px;
+    }
+
+    .tn2g-excuse-card::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      background: rgba(255, 255, 255, 0.055);
+      border-radius: 50%;
+      bottom: -70px;
+      left: -60px;
+    }
+
+    .tn2g-badge {
+      display: inline-block;
+      background: #F4D35E;
+      color: #12355B;
+      font-weight: 900;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 9px 15px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tn2g-excuse-card h1 {
+      font-size: clamp(2.2rem, 5vw, 3.7rem);
+      margin: 0 0 16px;
+      line-height: 1.02;
+      color: #ffffff;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tn2g-subtitle {
+      max-width: 650px;
+      margin: 0 auto 32px;
+      font-size: 1.12rem;
+      line-height: 1.65;
+      opacity: 0.94;
+      color: #ffffff;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tn2g-excuse-box {
+      min-height: 132px;
+      background: rgba(255, 255, 255, 0.13);
+      border: 2px solid rgba(255, 255, 255, 0.24);
+      border-radius: 24px;
+      padding: 30px 26px;
+      margin: 30px auto;
+      max-width: 680px;
+      font-size: 1.38rem;
+      line-height: 1.45;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      box-sizing: border-box;
+    }
+
+    .tn2g-excuse-box.is-changing {
+      transform: scale(0.97);
+      opacity: 0.35;
+    }
+
+    .tn2g-actions {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 14px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tn2g-btn,
+    .tn2g-btn:visited {
+      border: none;
+      border-radius: 999px;
+      padding: 15px 24px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
+      font-family: inherit;
+    }
+
+    .tn2g-btn:hover {
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .tn2g-btn:active {
+      transform: translateY(4px);
+    }
+
+    .tn2g-btn-main {
+      background: #F4D35E;
+      color: #12355B;
+      box-shadow: 0 8px 0 #C9A83F;
+    }
+
+    .tn2g-btn-light {
+      background: #ffffff;
+      color: #12355B;
+      box-shadow: 0 8px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .tn2g-btn-whatsapp {
+      background: #25D366;
+      color: #ffffff;
+      box-shadow: 0 8px 0 #128C47;
+    }
+
+    .tn2g-btn:disabled,
+    .tn2g-btn.is-disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none;
+    }
+
+    .tn2g-copy-feedback {
+      min-height: 24px;
+      margin: 18px 0 0;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #F4D35E;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tn2g-community-box {
+      max-width: 650px;
+      margin: 28px auto 0;
+      padding: 20px 22px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      position: relative;
+      z-index: 2;
+    }
+
+    .tn2g-community-box p {
+      margin: 0 0 14px;
+      opacity: 0.94;
+      color: #ffffff;
+    }
+
+    .tn2g-community-link,
+    .tn2g-community-link:visited {
+      display: inline-block;
+      background: transparent;
+      color: #F4D35E;
+      border: 2px solid #F4D35E;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-weight: 900;
+      text-decoration: none;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    }
+
+    .tn2g-community-link:hover {
+      background: #F4D35E;
+      color: #12355B;
+      transform: translateY(-1px);
+    }
+
+    .tn2g-warning {
+      margin: 30px auto 0;
+      max-width: 590px;
+      font-size: 0.96rem;
+      line-height: 1.55;
+      opacity: 0.88;
+      color: #ffffff;
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (max-width: 700px) {
+      .tn2g-excuse-generator {
+        padding: 34px 10px;
+      }
+
+      .tn2g-excuse-card {
+        padding: 36px 20px;
+        border-radius: 24px;
+      }
+
+      .tn2g-excuse-box {
+        font-size: 1.13rem;
+        padding: 24px 18px;
+        min-height: 118px;
+      }
+
+      .tn2g-actions {
+        flex-direction: column;
+      }
+
+      .tn2g-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tn2g-excuse-generator">
+    <div class="tn2g-excuse-card">
+      <div class="tn2g-badge">TN2G Utility Non Richiesta</div>
+
+      <h1>Generatore di Scuse TN2G</h1>
+
+      <p class="tn2g-subtitle">
+        Hai confermato troppo presto? Il divano ha preso il controllo?
+        Premi il pulsante e ricevi una scusa semi-credibile.
+      </p>
+
+      <div id="excuseBox" class="tn2g-excuse-box">
+        Premi il pulsante. Il caos farà il resto.
+      </div>
+
+      <div class="tn2g-actions">
+        <button id="generateExcuseBtn" class="tn2g-btn tn2g-btn-main">
+          Genera una scusa
+        </button>
+
+        <button id="copyExcuseBtn" class="tn2g-btn tn2g-btn-light" disabled>
+          Copia scusa
+        </button>
+
+        <a
+          id="whatsappShareBtn"
+          class="tn2g-btn tn2g-btn-whatsapp is-disabled"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Condividi su WhatsApp
+        </a>
+      </div>
+
+      <p id="copyFeedback" class="tn2g-copy-feedback"></p>
+
+      <div class="tn2g-community-box">
+        <p>Vuoi usare la scusa direttamente nel suo habitat naturale?</p>
+
+        <a
+          class="tn2g-community-link"
+          href="https://chat.whatsapp.com/ECKcv63NBr5KW2wc5Lesmt"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Entra nella community TN2G
+        </a>
+      </div>
+
+      <p class="tn2g-warning">
+        ⚠️ Attenzione: l’uso improprio del generatore può comportare
+        l’assegnazione del badge <strong>Disertore</strong>.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const TN2G_COMMUNITY_LINK = "https://chat.whatsapp.com/ECKcv63NBr5KW2wc5Lesmt";
+
+      const tn2gExcuses = [
+        "Raga scusate, stavo venendo ma il mio livello sociale è sceso sotto la soglia minima consentita.",
+        "Ho avuto un imprevisto mistico con la lavatrice. Non posso aggiungere altro.",
+        "Mi ero preparato psicologicamente, poi il divano ha presentato un’offerta migliore.",
+        "Sono bloccato in una quest secondaria e non riesco ad abbandonarla.",
+        "Raga arrivo dopo. Traduzione ufficiale: non arriverò.",
+        "Ho aperto Google Maps, ho visto il tragitto e ho rivalutato tutta la mia esistenza.",
+        "Mi si è aggiornato il sistema operativo dell’anima.",
+        "Sono uscito mentalmente, ma fisicamente sono rimasto in casa.",
+        "Avevo tutta l’intenzione di venire, poi ho fatto l’errore di sedermi.",
+        "Il mio outfit era pronto. Io no.",
+        "Raga scusate, oggi ho esaurito i gettoni sociali.",
+        "Sto combattendo una battaglia personale contro la gravità del letto.",
+        "Mi ero organizzato benissimo, infatti non verrò.",
+        "Ho avuto un’emergenza domestica: il divano sembrava triste.",
+        "Il meteo interiore segnala chiusura sociale fino a domani.",
+        "Sono stato rapito da una pennichella non consensuale.",
+        "Mi sono preparato troppo presto e ho perso slancio.",
+        "Il mio corpo ha votato contro la mia agenda.",
+        "Ho chiesto un parere al cuscino e ha detto di restare.",
+        "Non posso venire: ho una riunione urgente con me stesso.",
+        "Sono in modalità risparmio energetico.",
+        "Avevo detto sì in una versione più ottimista di me.",
+        "Il mio entusiasmo iniziale non ha superato la fase esecutiva.",
+        "Sto partecipando spiritualmente.",
+        "Mi sono perso tra il pensiero di venire e l’azione concreta.",
+        "Raga scusate, sono stato sconfitto da una coperta.",
+        "Il piano era uscire. Poi la realtà ha fatto ricorso.",
+        "Ho appena realizzato che socializzare richiede presenza fisica.",
+        "Sono tecnicamente pronto, emotivamente in manutenzione.",
+        "Oggi il mio personaggio non ha abbastanza stamina.",
+        "Sono stato trattenuto da cause di forza maggiore: me stesso.",
+        "Mi sono vestito, poi mi sono seduto. Grave errore tattico.",
+        "Il mio calendario diceva sì, il mio sistema nervoso ha detto no.",
+        "Raga scusate, sono in cooldown sociale.",
+        "Ho perso il duello contro il pigiama.",
+        "Ho aperto la chat, ho visto troppi messaggi e sono evaporato.",
+        "Ho avuto un bug nella fase di materializzazione all’evento.",
+        "La mia presenza è attualmente in fase beta e non stabile."
+      ];
+
+      const excuseBox = document.getElementById("excuseBox");
+      const generateExcuseBtn = document.getElementById("generateExcuseBtn");
+      const copyExcuseBtn = document.getElementById("copyExcuseBtn");
+      const whatsappShareBtn = document.getElementById("whatsappShareBtn");
+      const copyFeedback = document.getElementById("copyFeedback");
+
+      let lastExcuseIndex = -1;
+      let currentExcuse = "";
+
+      function buildShareText(excuse) {
+        return encodeURIComponent(
+          "Scusa ufficiale generata dal Generatore di Scuse TN2G:\n\n" +
+          "“" + excuse + "”\n\n" +
+          "Vuoi generare anche tu una scusa discutibile? Entra nella community TN2G:\n" +
+          TN2G_COMMUNITY_LINK
+        );
+      }
+
+      function updateButtons() {
+        copyExcuseBtn.disabled = false;
+        whatsappShareBtn.classList.remove("is-disabled");
+        whatsappShareBtn.href = "https://wa.me/?text=" + buildShareText(currentExcuse);
+      }
+
+      function generateExcuse() {
+        excuseBox.classList.add("is-changing");
+        copyFeedback.textContent = "";
+
+        setTimeout(function () {
+          let randomIndex;
+
+          do {
+            randomIndex = Math.floor(Math.random() * tn2gExcuses.length);
+          } while (randomIndex === lastExcuseIndex);
+
+          lastExcuseIndex = randomIndex;
+          currentExcuse = tn2gExcuses[randomIndex];
+
+          excuseBox.textContent = "“" + currentExcuse + "”";
+          excuseBox.classList.remove("is-changing");
+
+          updateButtons();
+        }, 180);
+      }
+
+      async function copyExcuse() {
+        if (!currentExcuse) return;
+
+        const textToCopy =
+          "Scusa ufficiale TN2G:\n\n" +
+          "“" + currentExcuse + "”\n\n" +
+          "Generata dal Generatore di Scuse TN2G.";
+
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          copyFeedback.textContent = "Scusa copiata. Ora puoi usarla con moderata vergogna.";
+        } catch (error) {
+          const tempTextArea = document.createElement("textarea");
+          tempTextArea.value = textToCopy;
+          document.body.appendChild(tempTextArea);
+          tempTextArea.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempTextArea);
+
+          copyFeedback.textContent = "Scusa copiata. Ora puoi usarla con moderata vergogna.";
+        }
+
+        setTimeout(function () {
+          copyFeedback.textContent = "";
+        }, 3500);
+      }
+
+      generateExcuseBtn.addEventListener("click", generateExcuse);
+      copyExcuseBtn.addEventListener("click", copyExcuse);
+    });
+  </script>
+</body>
+</html>
