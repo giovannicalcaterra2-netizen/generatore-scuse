@@ -1,0 +1,179 @@
+<div class="tn2g-excuse-generator">
+  <div class="tn2g-excuse-card">
+    <div class="tn2g-badge">TN2G Utility Non Richiesta</div>
+
+    <h2>Generatore di Scuse TN2G</h2>
+
+    <p class="tn2g-subtitle">
+      Hai confermato troppo presto? Il divano ha preso il controllo?
+      Premi il pulsante e ricevi una scusa semi-credibile.
+    </p>
+
+    <div id="excuseBox" class="tn2g-excuse-box">
+      Premi il pulsante. Il caos farà il resto.
+    </div>
+
+    <div class="tn2g-actions">
+      <button id="generateExcuseBtn" class="tn2g-btn tn2g-btn-main">
+        Genera una scusa
+      </button>
+
+      <button id="copyExcuseBtn" class="tn2g-btn tn2g-btn-light" disabled>
+        Copia scusa
+      </button>
+
+      <a
+        id="whatsappShareBtn"
+        class="tn2g-btn tn2g-btn-whatsapp is-disabled"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Condividi su WhatsApp
+      </a>
+    </div>
+
+    <p id="copyFeedback" class="tn2g-copy-feedback"></p>
+
+    <div class="tn2g-community-box">
+      <p>Vuoi usare la scusa direttamente nel suo habitat naturale?</p>
+
+      <a
+        class="tn2g-community-link"
+        href="https://chat.whatsapp.com/ECKcv63NBr5KW2wc5Lesmt"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Entra nella community TN2G
+      </a>
+    </div>
+
+    <p class="tn2g-warning">
+      ⚠️ Attenzione: l’uso improprio del generatore può comportare
+      l’assegnazione del badge <strong>Disertore</strong>.
+    </p>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const TN2G_COMMUNITY_LINK = "https://chat.whatsapp.com/ECKcv63NBr5KW2wc5Lesmt";
+
+  const tn2gExcuses = [
+    "Raga scusate, stavo venendo ma il mio livello sociale è sceso sotto la soglia minima consentita.",
+    "Ho avuto un imprevisto mistico con la lavatrice. Non posso aggiungere altro.",
+    "Mi ero preparato psicologicamente, poi il divano ha presentato un’offerta migliore.",
+    "Sono bloccato in una quest secondaria e non riesco ad abbandonarla.",
+    "Raga arrivo dopo. Traduzione ufficiale: non arriverò.",
+    "Ho aperto Google Maps, ho visto il tragitto e ho rivalutato tutta la mia esistenza.",
+    "Mi si è aggiornato il sistema operativo dell’anima.",
+    "Sono uscito mentalmente, ma fisicamente sono rimasto in casa.",
+    "Avevo tutta l’intenzione di venire, poi ho fatto l’errore di sedermi.",
+    "Il mio outfit era pronto. Io no.",
+    "Raga scusate, oggi ho esaurito i gettoni sociali.",
+    "Sto combattendo una battaglia personale contro la gravità del letto.",
+    "Mi ero organizzato benissimo, infatti non verrò.",
+    "Ho avuto un’emergenza domestica: il divano sembrava triste.",
+    "Il meteo interiore segnala chiusura sociale fino a domani.",
+    "Sono stato rapito da una pennichella non consensuale.",
+    "Mi sono preparato troppo presto e ho perso slancio.",
+    "Il mio corpo ha votato contro la mia agenda.",
+    "Ho chiesto un parere al cuscino e ha detto di restare.",
+    "Non posso venire: ho una riunione urgente con me stesso.",
+    "Sono in modalità risparmio energetico.",
+    "Avevo detto sì in una versione più ottimista di me.",
+    "Il mio entusiasmo iniziale non ha superato la fase esecutiva.",
+    "Sto partecipando spiritualmente.",
+    "Mi sono perso tra il pensiero di venire e l’azione concreta.",
+    "Raga scusate, sono stato sconfitto da una coperta.",
+    "Il piano era uscire. Poi la realtà ha fatto ricorso.",
+    "Ho appena realizzato che socializzare richiede presenza fisica.",
+    "Sono tecnicamente pronto, emotivamente in manutenzione.",
+    "Oggi il mio personaggio non ha abbastanza stamina.",
+    "Sono stato trattenuto da cause di forza maggiore: me stesso.",
+    "Mi sono vestito, poi mi sono seduto. Grave errore tattico.",
+    "Il mio calendario diceva sì, il mio sistema nervoso ha detto no.",
+    "Raga scusate, sono in cooldown sociale.",
+    "Ho perso il duello contro il pigiama.",
+    "Ho aperto la chat, ho visto troppi messaggi e sono evaporato.",
+    "Ho avuto un bug nella fase di materializzazione all’evento.",
+    "La mia presenza è attualmente in fase beta e non stabile."
+  ];
+
+  const excuseBox = document.getElementById("excuseBox");
+  const generateExcuseBtn = document.getElementById("generateExcuseBtn");
+  const copyExcuseBtn = document.getElementById("copyExcuseBtn");
+  const whatsappShareBtn = document.getElementById("whatsappShareBtn");
+  const copyFeedback = document.getElementById("copyFeedback");
+
+  if (!excuseBox || !generateExcuseBtn || !copyExcuseBtn || !whatsappShareBtn) return;
+
+  let lastExcuseIndex = -1;
+  let currentExcuse = "";
+
+  function buildShareText(excuse) {
+    return encodeURIComponent(
+      "Scusa ufficiale generata dal Generatore di Scuse TN2G:\n\n" +
+      "“" + excuse + "”\n\n" +
+      "Vuoi generare anche tu una scusa discutibile? Entra nella community TN2G:\n" +
+      TN2G_COMMUNITY_LINK
+    );
+  }
+
+  function updateButtons() {
+    copyExcuseBtn.disabled = false;
+    whatsappShareBtn.classList.remove("is-disabled");
+    whatsappShareBtn.href = "https://wa.me/?text=" + buildShareText(currentExcuse);
+  }
+
+  function generateExcuse() {
+    excuseBox.classList.add("is-changing");
+    copyFeedback.textContent = "";
+
+    setTimeout(function () {
+      let randomIndex;
+
+      do {
+        randomIndex = Math.floor(Math.random() * tn2gExcuses.length);
+      } while (randomIndex === lastExcuseIndex);
+
+      lastExcuseIndex = randomIndex;
+      currentExcuse = tn2gExcuses[randomIndex];
+
+      excuseBox.textContent = "“" + currentExcuse + "”";
+      excuseBox.classList.remove("is-changing");
+
+      updateButtons();
+    }, 180);
+  }
+
+  async function copyExcuse() {
+    if (!currentExcuse) return;
+
+    const textToCopy =
+      "Scusa ufficiale TN2G:\n\n" +
+      "“" + currentExcuse + "”\n\n" +
+      "Generata dal Generatore di Scuse TN2G.";
+
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      copyFeedback.textContent = "Scusa copiata. Ora puoi usarla con moderata vergogna.";
+    } catch (error) {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = textToCopy;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempTextArea);
+      copyFeedback.textContent = "Scusa copiata. Ora puoi usarla con moderata vergogna.";
+    }
+
+    setTimeout(function () {
+      copyFeedback.textContent = "";
+    }, 3500);
+  }
+
+  generateExcuseBtn.addEventListener("click", generateExcuse);
+  copyExcuseBtn.addEventListener("click", copyExcuse);
+});
+</script>
