@@ -124,7 +124,7 @@
     .tn2g-actions {
       display: flex;
       justify-content: center;
-      align-items: stretch;
+      align-items: center;
       gap: 14px;
       flex-wrap: wrap;
       position: relative;
@@ -144,10 +144,14 @@
       align-items: center;
       justify-content: center;
       min-height: 54px;
+      min-width: 175px;
+      max-width: 260px;
+      white-space: nowrap;
       transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.2s ease;
       font-family: inherit;
+      box-sizing: border-box;
     }
-
+    
     .tn2g-btn:hover {
       transform: translateY(-2px);
       text-decoration: none;
@@ -177,7 +181,7 @@
 
     .tn2g-btn:disabled,
     .tn2g-btn.is-disabled {
-      opacity: 0.45;
+      opacity: 0.72;
       cursor: not-allowed;
       pointer-events: none;
       transform: none;
@@ -240,7 +244,7 @@
       z-index: 2;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 520px) {
       .tn2g-excuse-generator {
         padding: 34px 10px;
       }
